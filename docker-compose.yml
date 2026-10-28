@@ -1,0 +1,33 @@
+# Локальный запуск: база PostgreSQL и приложение из Dockerfile.
+#   docker compose up -d db        — только база (для make start / make test с хоста)
+#   docker compose up --build      — база и приложение на http://localhost:8080
+services:
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: flight_booking
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d flight_booking"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+
+  app:
+    build: .
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/flight_booking
+      PORT: 8080
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db-data:

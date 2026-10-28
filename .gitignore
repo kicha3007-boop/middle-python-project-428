@@ -1,0 +1,24 @@
+# Окружения и зависимости
+.venv/
+node_modules/
+
+# Кеши Python и инструментов
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# Собранная статика фронтенда: её раскладывает make build
+public/
+
+# TypeSpec, отчёты, временные файлы
+tsp-output/
+tmp/
+*.log
+
+# Локальные переменные окружения (шаблон — .env.example)
+.env
+
+.DS_Store
+.idea/
+.vscode/
